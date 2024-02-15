@@ -5,7 +5,6 @@ class Player {
   constructor(_color, _position, _displaySize) {
     this.playerColor = _color;
     this.position = _position;
-    this.score = 0;
     this.displaySize = _displaySize;
     this.level = 0; // Initialize the level to 0
     this.isDashing = false; // Initialize dashing flag

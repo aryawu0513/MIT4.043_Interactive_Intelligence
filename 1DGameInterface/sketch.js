@@ -33,7 +33,7 @@ function setup() {
 
   display = new Display(displaySize, pixelSize, ground); //Initializing the display
   display.setGround(ground);
-  console.log(ground);
+  //console.log(ground);
   playerOne = new Player(color(255, 0, 0), parseInt(3), displaySize); // Initializing players
   playerTwo = new Player(color(0, 0, 255), parseInt(0), displaySize);
 
@@ -42,7 +42,7 @@ function setup() {
 
   controller = new Controller(); // Initializing controller
 
-  score = { max: 3, winner: color(0, 0, 0) }; // score stores max number of points, and color
+  //score = { max: 3, winner: color(0, 0, 0) }; // score stores max number of points, and color
 }
 
 function draw() {

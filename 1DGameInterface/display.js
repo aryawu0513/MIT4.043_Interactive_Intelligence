@@ -30,7 +30,6 @@ class Display {
   }
 
   setGround(ground) {
-    //where can i freaking call this??
     for (let i = 0; i < this.displaySize; i++) {
       // console.log("before", this.displayBuffer[i]);
       this.displayBuffer[i] = ground[i] === "GROUND" ? color(255) : color(0);
@@ -43,8 +42,6 @@ class Display {
   show() {
     for (let i = 0; i < this.displaySize; i++) {
       //noStroke();
-      //fill(this.displayBuffer[i]);
-      //console.log(this.displayBuffer[i]);
       fill(this.displayBuffer[i]);
       rect(i * this.pixelSize, 0, this.pixelSize, this.pixelSize);
     }
