@@ -25,7 +25,7 @@ class Controller {
           ground[i] = random() < 0.8 ? "GROUND" : "VOID";
         }
         ground[0] = ground[3] = "GROUND";
-        display.setGround(ground);
+        //display.setGround(ground);
         playerOne.position = 3;
         playerOne.level = 0;
         playerTwo.position = 0;
@@ -46,6 +46,13 @@ class Controller {
         // show all players in the right place, by adding them to display buffer
         display.setPixel(playerOne.position, playerOne.playerColor);
         display.setPixel(playerTwo.position, playerTwo.playerColor);
+        display.setGradientColors(
+          playerOne.position,
+          playerTwo.position,
+          playerOne.playerColor,
+          playerTwo.playerColor
+        );
+
         // Add ground and void pixels to display buffer
         if (playerOne.level === 3 && playerTwo.level === 3) {
           this.gameState = "WIN";

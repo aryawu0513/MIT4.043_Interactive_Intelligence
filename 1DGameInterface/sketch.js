@@ -38,6 +38,7 @@ function setup() {
   playerOne = new Player(color(255, 0, 0), parseInt(3), displaySize); // Initializing players
   playerTwo = new Player(color(0, 0, 255), parseInt(0), displaySize);
 
+  display.setGradientColors(3, 0, color(255, 0, 0), color(0, 0, 255));
   tangleAnimation = new Animation(); // Initializing animation
   breakAnimation = new Animation();
 
