@@ -27,7 +27,7 @@ class Player {
   moveWhileDashing(_direction) {
     if (this.isDashing) {
       this.move(_direction);
-      setTimeout(() => this.moveWhileDashing(_direction), 100); // Call moveWhileDashing again after 1 second
+      setTimeout(() => this.moveWhileDashing(_direction), 50); // Call moveWhileDashing again after 1 second
     }
   }
   startDash(_direction) {

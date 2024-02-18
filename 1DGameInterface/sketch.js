@@ -24,12 +24,13 @@ let score; // Where we keep track of score and winner
 let ground = [];
 
 function setup() {
-  createCanvas(displaySize * pixelSize, pixelSize); // dynamically sets canvas size
-
-  for (let i = 0; i < displaySize; i++) {
-    // Randomly assign ground or void
-    ground[i] = random() < 0.8 ? "GROUND" : "VOID";
-  }
+  //createCanvas(displaySize * pixelSize, pixelSize); // dynamically sets canvas size
+  createCanvas(displaySize * pixelSize, 5 * pixelSize);
+  // for (let i = 0; i < displaySize; i++) {
+  //   // Randomly assign ground or void
+  //   ground[i] = random() < 0.8 ? "GROUND" : "VOID";
+  // }
+  // ground[0] = ground[3] = "GROUND";
 
   display = new Display(displaySize, pixelSize, ground); //Initializing the display
   display.setGround(ground);
@@ -47,7 +48,7 @@ function setup() {
 
 function draw() {
   // start with a blank screen
-  background(0, 0, 0);
+  background(51, 51, 51);
 
   // Runs state machine at determined framerate
   controller.update();

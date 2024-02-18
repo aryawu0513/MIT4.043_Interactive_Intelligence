@@ -3,7 +3,10 @@
 class Controller {
   // This is the state we start with.
   constructor() {
-    this.gameState = "PLAY";
+    this.gameState = "START";
+    this.startTime = 0;
+    this.endTime = 0;
+    this.totalTime = 0;
   }
 
   // This is called from draw() in sketch.js with every frame
@@ -14,6 +17,24 @@ class Controller {
     // This is where your game logic lives
     /////////////////////////////////////////////////////////////////
     switch (this.gameState) {
+      case "START":
+        // clear screen at frame rate so we always start fresh
+        display.clear();
+        for (let i = 0; i < displaySize; i++) {
+          // Randomly assign ground or void
+          ground[i] = random() < 0.8 ? "GROUND" : "VOID";
+        }
+        ground[0] = ground[3] = "GROUND";
+        display.setGround(ground);
+        playerOne.position = 3;
+        playerOne.level = 0;
+        playerTwo.position = 0;
+        playerTwo.level = 0;
+        this.startTime = millis();
+        this.endTime = 0;
+        this.totalTime = 0;
+        this.gameState = "PLAY";
+
       // This is the main game state, where the playing actually happens
       case "PLAY":
         // clear screen at frame rate so we always start fresh
@@ -26,7 +47,11 @@ class Controller {
         display.setPixel(playerOne.position, playerOne.playerColor);
         display.setPixel(playerTwo.position, playerTwo.playerColor);
         // Add ground and void pixels to display buffer
-
+        if (playerOne.level === 3 && playerTwo.level === 3) {
+          this.gameState = "WIN";
+          console.log("Both players at level 3. WIN ");
+          this.endTime = millis();
+        }
         break;
       case "FAR": //case FAR
         // clear screen at frame rate so we always start fresh
@@ -49,7 +74,7 @@ class Controller {
           playerTwo.position = 0;
           playerTwo.level = 0;
         }
-
+        this.startTime = millis();
         break;
       // This state is used to play an animation, after a target has been caught by a player
       case "CLOSE": //case CLOSE
@@ -73,14 +98,15 @@ class Controller {
           playerTwo.position = 0;
           playerTwo.level = 0;
         }
-
+        this.startTime = millis();
         break;
 
       // Game is over. Show winner and clean everything up so we can start a new game.
       case "WIN":
         //light up w/ winner color by populating all pixels in buffer with their color
-        display.setAllPixels(score.winner);
-
+        display.clear();
+        display.setAllPixels(playerOne.playerColor);
+        this.totalTime = (this.endTime - this.startTime) / 1000;
         break;
 
       // Not used, it's here just for code compliance
@@ -104,11 +130,11 @@ class Controller {
 
     if (distance < requiredDistance) {
       console.log("Players are too close!");
+
       // Play animation for too close
       this.gameState = "CLOSE";
     } else if (distance > halfDisplaySize) {
       console.log("Players are too far!");
-      // Play animation for too far
       this.gameState = "FAR";
     }
   }
@@ -129,7 +155,7 @@ let keyPressedFlag = false;
 // This function gets called when a key on the keyboard is pressed
 function keyPressed() {
   keyPressedFlag = true;
-  // Move player one to the left if letter A is pressed
+  //Move player one to the left if letter A is pressed
   // if (key == "A" || key == "a") {
   //   playerTwo.move(-1);
   // }
@@ -149,7 +175,7 @@ function keyPressed() {
 
   // When you press the letter R, the game resets back to the play state
   if (key == "R" || key == "r") {
-    controller.gameState = "PLAY";
+    controller.gameState = "START";
   }
 
   if (key == "S" || key == "s") {

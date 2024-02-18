@@ -9,12 +9,6 @@ class Display {
     this.initColor = color(0, 0, 0); // black color
     this.displayBuffer = [];
     this.ground = ground;
-    // this.setGround(this.ground);
-
-    // Assign black to all pixels. Black = off
-    // for (let i = 0; i < this.displaySize; i++) {
-    //   this.displayBuffer[i] = this.initColor;
-    // }
   }
 
   // Color a specific pixel in the buffer
@@ -39,11 +33,39 @@ class Display {
 
   // Now write it to screen
   // This is the only function in the entire software that writes something directly to the screen. I recommend you keep it this way.
+  // show() {
+  //   for (let i = 0; i < this.displaySize; i++) {
+  //     fill(this.displayBuffer[i]);
+  //     rect(i * this.pixelSize, 0, this.pixelSize, this.pixelSize, 1);
+  //   }
+  //   if (controller.gameState === "PLAY") {
+  //     let totalTime = (millis() - controller.startTime) / 1000;
+  //     fill(255);
+  //     textSize(16);
+  //     text("Time: " + totalTime.toFixed(2) + "s", 10, 20);
+  //   }
+  // }
   show() {
     for (let i = 0; i < this.displaySize; i++) {
-      //noStroke();
       fill(this.displayBuffer[i]);
-      rect(i * this.pixelSize, 0, this.pixelSize, this.pixelSize);
+      rect(
+        i * this.pixelSize,
+        2 * this.pixelSize,
+        this.pixelSize,
+        this.pixelSize
+      );
+    }
+    if (controller.gameState === "WIN") {
+      let totalTime = controller.totalTime;
+      fill(255);
+      textSize(16);
+      text("Time: " + totalTime.toFixed(2) + "s", 10, 20);
+    } else {
+      let totalTime = (millis() - controller.startTime) / 1000;
+      console.log("HERE", totalTime);
+      fill(255);
+      textSize(16);
+      text("Time: " + totalTime.toFixed(2) + "s", 10, 20);
     }
   }
 
