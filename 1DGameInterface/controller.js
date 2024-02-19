@@ -241,7 +241,6 @@ function keyPressed() {
   // }
 
   if (sound.isLoaded()) {
-    console.log("Play");
     sound.play();
   }
 

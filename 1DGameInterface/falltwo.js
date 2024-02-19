@@ -13,7 +13,6 @@ class FallTwo {
 
     // The animation mimics an explosion and this variable tracks where the wave is in the display
     let k = this.start;
-    let tail = this.end;
 
     // Build up the array in this for loop
     for (let i = 0; i < this.numberOfFrames; i++) {
