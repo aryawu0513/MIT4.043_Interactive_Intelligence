@@ -33,6 +33,12 @@ class Player {
   startDash(_direction) {
     this.isDashing = true;
     this.moveWhileDashing(1); // Start moving immediately
+    // setTimeout(() => {
+    //   if (this.isDashing) {
+    //     this.stopDash();
+    //   }
+    // }, 3000);
+    console.log("STOP");
   }
 
   stopDash() {

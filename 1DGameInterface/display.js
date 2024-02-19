@@ -36,31 +36,79 @@ class Display {
     playerOneColor,
     playerTwoColor
   ) {
-    let start = min(playerOnePosition, playerTwoPosition);
-    let end = max(playerOnePosition, playerTwoPosition);
+    let start = playerTwoPosition;
+    let end = playerOnePosition;
+    if (start <= end) {
+      for (let i = start + 1; i < end; i++) {
+        let distanceToPlayerOne = abs(i - playerOnePosition);
+        let distanceToPlayerTwo = abs(i - playerTwoPosition);
+        let totalDistance = distanceToPlayerOne + distanceToPlayerTwo;
 
-    for (let i = start + 1; i < end; i++) {
-      let distanceToPlayerOne = abs(i - playerOnePosition);
-      let distanceToPlayerTwo = abs(i - playerTwoPosition);
-      let totalDistance = distanceToPlayerOne + distanceToPlayerTwo;
+        let redAmount =
+          (distanceToPlayerTwo / totalDistance) * red(playerOneColor) +
+          (distanceToPlayerOne / totalDistance) * red(playerTwoColor);
+        let blueAmount =
+          (distanceToPlayerTwo / totalDistance) * blue(playerOneColor) +
+          (distanceToPlayerOne / totalDistance) * blue(playerTwoColor);
 
-      let redAmount =
-        (distanceToPlayerTwo / totalDistance) * red(playerOneColor) +
-        (distanceToPlayerOne / totalDistance) * red(playerTwoColor);
-      let blueAmount =
-        (distanceToPlayerTwo / totalDistance) * blue(playerOneColor) +
-        (distanceToPlayerOne / totalDistance) * blue(playerTwoColor);
+        let gradientColor = color(redAmount, 0, blueAmount);
+        this.displayBuffer[i] = lerpColor(
+          this.displayBuffer[i],
+          gradientColor,
+          0.5
+        ); // Use lerpColor for smooth transitions
+      }
+    } else {
+      for (let i = start + 1; i < this.displaySize; i++) {
+        let distanceToPlayerOne = abs(playerOnePosition + this.displaySize - i);
+        let distanceToPlayerTwo = abs(i - playerTwoPosition);
+        let totalDistance = distanceToPlayerOne + distanceToPlayerTwo;
+        let redAmount =
+          (distanceToPlayerTwo / totalDistance) * red(playerOneColor) +
+          (distanceToPlayerOne / totalDistance) * red(playerTwoColor);
+        let blueAmount =
+          (distanceToPlayerTwo / totalDistance) * blue(playerOneColor) +
+          (distanceToPlayerOne / totalDistance) * blue(playerTwoColor);
 
-      let gradientColor = color(redAmount, 0, blueAmount);
-      console.log("gradientColor", gradientColor);
-      this.displayBuffer[i] = lerpColor(
-        this.displayBuffer[i],
-        gradientColor,
-        0.5
-      ); // Use lerpColor for smooth transitions
-      console.log("displayBuffer", this.displayBuffer[i]);
+        let gradientColor = color(redAmount, 0, blueAmount);
+        this.displayBuffer[i] = lerpColor(
+          this.displayBuffer[i],
+          gradientColor,
+          0.5
+        ); // Use lerpColor for smooth transitions
+      }
+      for (let i = 0; i < end; i++) {
+        let distanceToPlayerOne = abs(playerOnePosition);
+        let distanceToPlayerTwo = abs(this.displaySize - playerTwoPosition + i);
+        let totalDistance = distanceToPlayerOne + distanceToPlayerTwo;
+        let redAmount =
+          (distanceToPlayerTwo / totalDistance) * red(playerOneColor) +
+          (distanceToPlayerOne / totalDistance) * red(playerTwoColor);
+        let blueAmount =
+          (distanceToPlayerTwo / totalDistance) * blue(playerOneColor) +
+          (distanceToPlayerOne / totalDistance) * blue(playerTwoColor);
+
+        let gradientColor = color(redAmount, 0, blueAmount);
+        this.displayBuffer[i] = lerpColor(
+          this.displayBuffer[i],
+          gradientColor,
+          0.5
+        ); // Use lerpColor for smooth transitions
+      }
     }
   }
+
+  // fadeAway(position) {
+  //   let pixelColor = this.displayBuffer[position];
+  //   let backgroundColor =
+  //     this.ground[position] === "GROUND" ? color(255) : color(0);
+  //   for (let i = 0; i <= 100; i++) {
+  //     let blendColor = lerpColor(pixelColor, backgroundColor, i / 100);
+  //     setTimeout(() => {
+  //       this.displayBuffer[position] = blendColor;
+  //     }, i * 10); // Change the pixel color gradually over 1 second (1000 ms)
+  //   }
+  // }
 
   // Now write it to screen
   show() {
@@ -73,18 +121,18 @@ class Display {
         this.pixelSize
       );
     }
-    // if (controller.gameState === "WIN") {
-    //   let totalTime = controller.totalTime;
-    //   fill(255);
-    //   textSize(16);
-    //   text("Time: " + totalTime.toFixed(2) + "s", 10, 20);
-    // } else {
-    //   let totalTime = (millis() - controller.startTime) / 1000;
-    //   console.log("HERE", totalTime);
-    //   fill(255);
-    //   textSize(16);
-    //   text("Time: " + totalTime.toFixed(2) + "s", 10, 20);
-    // }
+    if (controller.gameState === "WIN") {
+      let totalTime = controller.totalTime;
+      fill(255);
+      textSize(16);
+      text("Time: " + totalTime.toFixed(2) + "s", 10, 20);
+    } else {
+      let totalTime = (millis() - controller.startTime) / 1000;
+      //console.log("HERE", totalTime);
+      fill(255);
+      textSize(16);
+      text("Time: " + totalTime.toFixed(2) + "s", 10, 20);
+    }
   }
 
   // Let's empty the display before we start adding things to it again

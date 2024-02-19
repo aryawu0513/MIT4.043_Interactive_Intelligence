@@ -110,10 +110,77 @@ class Controller {
 
       // Game is over. Show winner and clean everything up so we can start a new game.
       case "WIN":
+        sound.stop();
         //light up w/ winner color by populating all pixels in buffer with their color
         display.clear();
-        display.setAllPixels(playerOne.playerColor);
+        display.setAllPixels(color(255, 0, 255));
         this.totalTime = (this.endTime - this.startTime) / 1000;
+        break;
+
+      case "DeathOne":
+        // display.fadeAway(playerOne.position);
+        // for (let i = playerTwo.position; i < playerOne.position; i++) {
+        //   display.fadeAway(i);
+        // }
+        // this.gameState = "START";
+        // break;
+        if (!this.fallAnimationOne) {
+          this.fallAnimationOne = new FallOne(playerOne, playerTwo, display);
+        }
+
+        let frameToShow3 = this.fallAnimationOne.currentFrame(); // Get the current frame
+
+        // Update the display buffer with the current frame of the animation
+        for (let i = 0; i < this.fallAnimationOne.pixels; i++) {
+          display.setPixel(i, this.fallAnimationOne.animation[frameToShow3][i]);
+        }
+
+        // Check if the animation has finished
+        if (frameToShow3 == this.fallAnimationOne.animation.length - 1) {
+          // Reset the game state and player positions
+          this.gameState = "START";
+          playerOne.position = 3;
+          playerOne.level = 0;
+          playerTwo.position = 0;
+          playerTwo.level = 0;
+
+          // Reset the fallAnimation to null so it can be recreated on the next "Death" state
+          this.fallAnimationOne = null;
+        }
+        this.startTime = millis();
+        break;
+      case "DeathTwo":
+        // display.fadeAway(playerOne.position);
+        // for (let i = playerTwo.position; i < playerOne.position; i++) {
+        //   display.fadeAway(i);
+        // }
+        // this.gameState = "START";
+        // break;
+        if (!this.fallAnimationTwo) {
+          this.fallAnimationTwo = new FallTwo(playerOne, playerTwo, display);
+        }
+
+        let frameToShow4 = this.fallAnimationTwo.currentFrame(); // Get the current frame
+
+        // Update the display buffer with the current frame of the animation
+        for (let i = 0; i < this.fallAnimationTwo.pixels; i++) {
+          display.setPixel(i, this.fallAnimationTwo.animation[frameToShow4][i]);
+        }
+
+        // Check if the animation has finished
+        if (frameToShow4 == this.fallAnimationTwo.animation.length - 1) {
+          // Reset the game state and player positions
+          this.gameState = "START";
+          playerOne.position = 3;
+          playerOne.level = 0;
+          playerTwo.position = 0;
+          playerTwo.level = 0;
+
+          // Reset the fallAnimation to null so it can be recreated on the next "Death" state
+          this.fallAnimationTwo = null;
+        }
+        this.startTime = millis();
+
         break;
 
       // Not used, it's here just for code compliance
@@ -135,12 +202,16 @@ class Controller {
     let requiredDistance = 3 - min(playerOne.level, playerTwo.level);
     let halfDisplaySize = displaySize / 2; // Assuming displaySize is even
 
+    let volume = map(distance, requiredDistance, halfDisplaySize, 1.0, 0.0);
+    sound.setVolume(volume);
+
     if (distance < requiredDistance) {
       console.log("Players are too close!");
-
+      sound.stop();
       // Play animation for too close
       this.gameState = "CLOSE";
     } else if (distance > halfDisplaySize) {
+      sound.stop();
       console.log("Players are too far!");
       this.gameState = "FAR";
     }
@@ -148,11 +219,13 @@ class Controller {
 
   checkVoid() {
     if (ground[playerOne.position] === "VOID" && keyPressedFlag === false) {
-      console.log("PlayerOne dies");
+      sound.stop();
+      this.gameState = "DeathOne";
       // Add any additional actions you want to take when player loses
     }
     if (ground[playerTwo.position] === "VOID" && keyPressedFlag === false) {
-      console.log("PlayerTwo dies");
+      this.gameState = "DeathTwo";
+      sound.stop();
       // Add any additional actions you want to take when player loses
     }
   }
@@ -167,7 +240,11 @@ function keyPressed() {
   //   playerTwo.move(-1);
   // }
 
-  // And so on...
+  if (sound.isLoaded()) {
+    console.log("Play");
+    sound.play();
+  }
+
   if (key == "D" || key == "d") {
     playerTwo.move(1);
   }

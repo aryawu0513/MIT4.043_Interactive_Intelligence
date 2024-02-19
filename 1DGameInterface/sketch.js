@@ -17,20 +17,30 @@ let display; // Aggregates our final visual output before showing it on the scre
 
 let controller; // This is where the state machine and game logic lives
 
-let collisionAnimation; // Where we store and manage the collision animation
+// let collisionAnimation; // Where we store and manage the collision animation
+let fallAnimation;
 
 let score; // Where we keep track of score and winner
 
 let ground = [];
 
+let sound;
+
+function preload() {
+  // Load the sound file during preload
+  sound = loadSound("robotsound.mp3");
+  console.log(sound);
+}
+
 function setup() {
+  frameRate(60);
   //createCanvas(displaySize * pixelSize, pixelSize); // dynamically sets canvas size
   createCanvas(displaySize * pixelSize, 5 * pixelSize);
-  // for (let i = 0; i < displaySize; i++) {
-  //   // Randomly assign ground or void
-  //   ground[i] = random() < 0.8 ? "GROUND" : "VOID";
-  // }
-  // ground[0] = ground[3] = "GROUND";
+  for (let i = 0; i < displaySize; i++) {
+    // Randomly assign ground or void
+    ground[i] = random() < 0.8 ? "GROUND" : "VOID";
+  }
+  ground[0] = ground[3] = "GROUND";
 
   display = new Display(displaySize, pixelSize, ground); //Initializing the display
   display.setGround(ground);
@@ -41,7 +51,8 @@ function setup() {
   display.setGradientColors(3, 0, color(255, 0, 0), color(0, 0, 255));
   tangleAnimation = new Animation(); // Initializing animation
   breakAnimation = new Animation();
-
+  fallAnimationOne = new FallOne(playerOne, playerTwo, display);
+  fallAnimationTwo = new FallTwo(playerOne, playerTwo, display);
   controller = new Controller(); // Initializing controller
 
   //score = { max: 3, winner: color(0, 0, 0) }; // score stores max number of points, and color
