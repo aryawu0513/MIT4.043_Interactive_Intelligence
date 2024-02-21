@@ -1,4 +1,4 @@
-class Animation {
+class closeAnimation {
   constructor() {
     this.numberOfFrames = 30; // how many frames the animation has
     this.pixels = 30; // how wide the animation is
@@ -27,13 +27,13 @@ class Animation {
 
       // Start from the center
       let center = parseInt(this.pixels / 2);
+      if (k <= center) {
+        // Animate to the right
+        this.animation[i][this.pixels - k] = color(255, 0, 0);
 
-      // Animate to the right
-      this.animation[i][k + center] = color(255, 255, 0);
-
-      // Animate to the left
-      this.animation[i][center - k] = color(255, 255, 0);
-
+        // Animate to the left
+        this.animation[i][k] = color(0, 0, 255);
+      }
       // Increment animation pixel
       k = k + 1;
     }

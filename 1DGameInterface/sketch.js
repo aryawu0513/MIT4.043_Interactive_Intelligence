@@ -29,7 +29,7 @@ let sound;
 function preload() {
   // Load the sound file during preload
   sound = loadSound("robotsound.mp3");
-  console.log(sound);
+  //console.log(sound);
 }
 
 function setup() {
@@ -49,8 +49,8 @@ function setup() {
   playerTwo = new Player(color(0, 0, 255), parseInt(0), displaySize);
 
   display.setGradientColors(3, 0, color(255, 0, 0), color(0, 0, 255));
-  tangleAnimation = new Animation(); // Initializing animation
-  breakAnimation = new Animation();
+  tangleAnimation = new closeAnimation(); // Initializing animation
+  breakAnimation = new farAnimation();
   fallAnimationOne = new FallOne(playerOne, playerTwo, display);
   fallAnimationTwo = new FallTwo(playerOne, playerTwo, display);
   controller = new Controller(); // Initializing controller

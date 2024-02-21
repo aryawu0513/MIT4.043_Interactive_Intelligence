@@ -206,13 +206,13 @@ class Controller {
     sound.setVolume(volume);
 
     if (distance < requiredDistance) {
-      console.log("Players are too close!");
+      //console.log("Players are too close!");
       sound.stop();
       // Play animation for too close
       this.gameState = "CLOSE";
     } else if (distance > halfDisplaySize) {
       sound.stop();
-      console.log("Players are too far!");
+      //console.log("Players are too far!");
       this.gameState = "FAR";
     }
   }

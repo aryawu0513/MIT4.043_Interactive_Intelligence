@@ -133,6 +133,11 @@ class Display {
       textSize(16);
       text("Time: " + totalTime.toFixed(2) + "s", 10, 20);
     }
+    if (controller.gameState === "PLAY") {
+      fill(255);
+      textSize(16);
+      text("Distance: " + (3 - int(playerTwo.level)), 150, 20);
+    }
   }
 
   // Let's empty the display before we start adding things to it again
