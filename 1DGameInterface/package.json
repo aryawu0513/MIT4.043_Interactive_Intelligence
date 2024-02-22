@@ -1,0 +1,16 @@
+{
+  "name": "1dgameinterface",
+  "version": "1.0.0",
+  "description": "idgameinterface for 4.043",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "arya",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.4"
+  }
+}
