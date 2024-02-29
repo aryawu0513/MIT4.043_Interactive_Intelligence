@@ -22,6 +22,13 @@ class Player {
     } else if (this.position >= this.displaySize) {
       this.position -= this.displaySize;
       this.level++;
+      for (let i = 0; i < displaySize; i++) {
+        // Randomly assign ground or void
+        if (ground[i] === "GROUND" && Math.random() < 0.05) {
+          ground[i] = "VOID";
+        }
+      }
+      display.setGround(ground);
     }
   }
   moveWhileDashing(_direction) {

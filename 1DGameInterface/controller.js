@@ -22,7 +22,7 @@ class Controller {
         display.clear();
         for (let i = 0; i < displaySize; i++) {
           // Randomly assign ground or void
-          ground[i] = random() < 0.8 ? "GROUND" : "VOID";
+          ground[i] = random() < 0.88 ? "GROUND" : "VOID";
         }
         ground[0] = ground[3] = "GROUND";
         //display.setGround(ground);
