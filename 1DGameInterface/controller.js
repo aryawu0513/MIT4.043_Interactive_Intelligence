@@ -218,15 +218,36 @@ class Controller {
   }
 
   checkVoid() {
-    if (ground[playerOne.position] === "VOID" && keyPressedFlag === false) {
-      sound.stop();
-      this.gameState = "DeathOne";
-      // Add any additional actions you want to take when player loses
+    if (ground[playerOne.position] === "VOID" && !keyPressedFlag) {
+      playerOne.voidTimer++; // Increment the timer if player one is on void space and no key is pressed
+      //console.log("Player One on void space. Timer:", playerOne.voidTimer);
+      if (playerOne.voidTimer >= 20) {
+        // //console.log(
+        //   "Player One has been on void space for more than 1 second."
+        // );
+        sound.stop();
+        this.gameState = "DeathOne";
+        // Add any additional actions you want to take when player loses
+      }
+    } else {
+      playerOne.voidTimer = 0; // Reset the timer if player is not on void space or a key is pressed
+      //console.log("Player One not on void space. Timer reset.");
     }
-    if (ground[playerTwo.position] === "VOID" && keyPressedFlag === false) {
-      this.gameState = "DeathTwo";
-      sound.stop();
-      // Add any additional actions you want to take when player loses
+
+    if (ground[playerTwo.position] === "VOID" && !keyPressedFlag) {
+      playerTwo.voidTimer++; // Increment the timer if player two is on void space and no key is pressed
+      //console.log("Player Two on void space. Timer:", playerTwo.voidTimer);
+      if (playerTwo.voidTimer >= 20) {
+        // console.log(
+        //   "Player Two has been on void space for more than 1 second."
+        // );
+        sound.stop();
+        this.gameState = "DeathTwo";
+        // Add any additional actions you want to take when player loses
+      }
+    } else {
+      playerTwo.voidTimer = 0; // Reset the timer if player is not on void space or a key is pressed
+      //console.log("Player Two not on void space. Timer reset.");
     }
   }
 }
