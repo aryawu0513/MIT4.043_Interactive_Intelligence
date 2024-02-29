@@ -52,7 +52,6 @@ class Controller {
           playerOne.playerColor,
           playerTwo.playerColor
         );
-
         // Add ground and void pixels to display buffer
         if (playerOne.level === 3 && playerTwo.level === 3) {
           this.gameState = "WIN";
@@ -75,7 +74,7 @@ class Controller {
 
         //check if animation is done and we should move on to another state
         if (frameToShow1 == breakAnimation.animation.length - 1) {
-          this.gameState = "PLAY";
+          this.gameState = "START";
           playerOne.position = 3;
           playerOne.level = 0;
           playerTwo.position = 0;
@@ -99,7 +98,7 @@ class Controller {
 
         //check if animation is done and we should move on to another state
         if (frameToShow2 == tangleAnimation.animation.length - 1) {
-          this.gameState = "PLAY";
+          this.gameState = "START";
           playerOne.position = 3;
           playerOne.level = 0;
           playerTwo.position = 0;
