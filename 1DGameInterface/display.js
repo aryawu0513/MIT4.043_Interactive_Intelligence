@@ -40,6 +40,7 @@ class Display {
     let end = playerOnePosition;
     if (start <= end) {
       for (let i = start + 1; i < end; i++) {
+        let distance = abs(playerOnePosition - playerTwoPosition);
         let distanceToPlayerOne = abs(i - playerOnePosition);
         let distanceToPlayerTwo = abs(i - playerTwoPosition);
         let totalDistance = distanceToPlayerOne + distanceToPlayerTwo;
@@ -52,10 +53,21 @@ class Display {
           (distanceToPlayerOne / totalDistance) * blue(playerTwoColor);
 
         let gradientColor = color(redAmount, 0, blueAmount);
+        // Calculate the midpoint
+        // Calculate lerpFactor based on distance
+        let lerpFactor;
+        if (distance <= 5) {
+          lerpFactor = map(distance, 3 - playerTwo.level, 5, 0.1, 0.7);
+        } else if (distance >= 10) {
+          lerpFactor = map(distance, 10, 15, 0.7, 0.1);
+        } else {
+          lerpFactor = 0.7;
+        }
+        //let lerpFactor = map(distance, 2, 15, 0.7, 0.3); // Adjust lerp factor based on distance
         this.displayBuffer[i] = lerpColor(
           this.displayBuffer[i],
           gradientColor,
-          0.5
+          lerpFactor
         ); // Use lerpColor for smooth transitions
       }
     } else {
