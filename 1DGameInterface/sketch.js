@@ -29,6 +29,7 @@ let sound;
 function preload() {
   // Load the sound file during preload
   sound = loadSound("robotsound.mp3");
+  deathsound = loadSound("videogame-death-sound-43894.mp3");
   //console.log(sound);
 }
 

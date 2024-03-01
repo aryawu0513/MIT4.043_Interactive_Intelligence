@@ -125,7 +125,7 @@ class Display {
   // Now write it to screen
   show() {
     let totalTime = (millis() - controller.startTime) / 1000;
-    let alpha = map(totalTime, 0, 100, 255, 0);
+    let alpha = map(totalTime, 0, 1000, 255, 0);
     alpha = constrain(alpha, 0, 255); // Ensure alpha is within valid range
 
     for (let i = 0; i < this.displaySize; i++) {

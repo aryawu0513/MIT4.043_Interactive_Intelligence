@@ -7,6 +7,7 @@ class Controller {
     this.startTime = 0;
     this.endTime = 0;
     this.totalTime = 0;
+    this.deathsoundplayed = false;
   }
 
   // This is called from draw() in sketch.js with every frame
@@ -18,6 +19,7 @@ class Controller {
     /////////////////////////////////////////////////////////////////
     switch (this.gameState) {
       case "START":
+        this.deathsoundplayed = false;
         // clear screen at frame rate so we always start fresh
         display.clear();
         for (let i = 0; i < displaySize; i++) {
@@ -117,6 +119,10 @@ class Controller {
         break;
 
       case "DeathOne":
+        if (!this.deathsoundplayed) {
+          deathsound.play();
+          this.deathsoundplayed = true; // Set the flag to true to indicate that the sound has been played
+        }
         // display.fadeAway(playerOne.position);
         // for (let i = playerTwo.position; i < playerOne.position; i++) {
         //   display.fadeAway(i);
@@ -149,6 +155,10 @@ class Controller {
         this.startTime = millis();
         break;
       case "DeathTwo":
+        if (!this.deathsoundplayed) {
+          deathsound.play();
+          this.deathsoundplayed = true; // Set the flag to true to indicate that the sound has been played
+        }
         // display.fadeAway(playerOne.position);
         // for (let i = playerTwo.position; i < playerOne.position; i++) {
         //   display.fadeAway(i);
