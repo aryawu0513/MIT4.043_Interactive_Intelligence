@@ -46,8 +46,8 @@ function setup() {
   display = new Display(displaySize, pixelSize, ground); //Initializing the display
   display.setGround(ground);
   //console.log(ground);
-  playerOne = new Player(color(255, 0, 0), parseInt(3), displaySize); // Initializing players
-  playerTwo = new Player(color(0, 0, 255), parseInt(0), displaySize);
+  playerOne = new Player(color(200, 0, 35), parseInt(3), displaySize); // Initializing players
+  playerTwo = new Player(color(51, 87, 230), parseInt(0), displaySize);
 
   display.setGradientColors(3, 0, color(255, 0, 0), color(0, 0, 255));
   tangleAnimation = new closeAnimation(); // Initializing animation
@@ -61,7 +61,7 @@ function setup() {
 
 function draw() {
   // start with a blank screen
-  background(51, 51, 51);
+  background(0, 0, 0); //background(51, 51, 51);
 
   // Runs state machine at determined framerate
   controller.update();
