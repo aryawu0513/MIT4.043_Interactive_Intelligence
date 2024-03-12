@@ -114,7 +114,25 @@ class Controller {
         sound.stop();
         //light up w/ winner color by populating all pixels in buffer with their color
         display.clear();
-        display.setAllPixels(color(255, 0, 255));
+
+        // for (let i = 0; i < display.displaySize; i++) {
+        //   let t = i / display.displaySize; // Normalize i to a value between 0 and 1
+        //   let blendedColor = lerpColor(
+        //     playerTwo.playerColor,
+        //     playerOne.playerColor,
+        //     t
+        //   );
+        //   display.setPixel(i, blendedColor);
+        // }
+        let frameToShowwin = finalAnimation.currentFrame(); // this grabs number of current frame and increments it
+
+        // then grab every pixel of frame and put it into the display buffer
+        for (let i = 0; i < finalAnimation.pixels; i++) {
+          display.setPixel(i, finalAnimation.animation[frameToShowwin][i]);
+        }
+
+        //check if animation is done and we should move on to another state
+
         this.totalTime = (this.endTime - this.startTime) / 1000;
         break;
 
@@ -227,6 +245,9 @@ class Controller {
   }
 
   checkVoid() {
+    if (this.gameState != "PLAY") {
+      return; // or some other appropriate action
+    }
     if (ground[playerOne.position] === "VOID" && !keyPressedFlag) {
       playerOne.voidTimer++; // Increment the timer if player one is on void space and no key is pressed
       //console.log("Player One on void space. Timer:", playerOne.voidTimer);

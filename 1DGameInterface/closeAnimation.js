@@ -29,10 +29,10 @@ class closeAnimation {
       let center = parseInt(this.pixels / 2);
       if (k <= center) {
         // Animate to the right
-        this.animation[i][this.pixels - k] = color(255, 0, 0);
+        this.animation[i][this.pixels - k] = playerOne.playerColor;
 
         // Animate to the left
-        this.animation[i][k] = color(0, 0, 255);
+        this.animation[i][k] = playerTwo.playerColor;
       }
       // Increment animation pixel
       k = k + 1;

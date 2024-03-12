@@ -18,7 +18,6 @@ let display; // Aggregates our final visual output before showing it on the scre
 let controller; // This is where the state machine and game logic lives
 
 // let collisionAnimation; // Where we store and manage the collision animation
-let fallAnimation;
 
 let score; // Where we keep track of score and winner
 
@@ -54,6 +53,7 @@ function setup() {
   breakAnimation = new farAnimation();
   fallAnimationOne = new FallOne(playerOne, playerTwo, display);
   fallAnimationTwo = new FallTwo(playerOne, playerTwo, display);
+  finalAnimation = new winAnimation(playerOne, playerTwo, display);
   controller = new Controller(); // Initializing controller
 
   //score = { max: 3, winner: color(0, 0, 0) }; // score stores max number of points, and color
