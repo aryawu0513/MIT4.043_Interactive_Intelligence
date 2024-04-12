@@ -20,9 +20,13 @@ api_key = ''
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
-## need gooogle application api: export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/service_account_key.json"
-# eg.credential_path = "D:\Summer Projects\Translate\social media analysis-2a59d94ba22d.json"
-# os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
+import pygame
+
+def play_audio(file_path):
+    pygame.mixer.init()
+    pygame.mixer.music.load(file_path)
+    pygame.mixer.music.play()
+
 
 def speech_to_text(speech_file):
     audio_file= open(speech_file, "rb")
@@ -55,15 +59,15 @@ def record_wav():
     chans = 1
     samp_rate = 16000
     chunk = 4096
-    record_secs = 10
-    dev_index = 1
+    record_secs = 3
+    # dev_index = 1
     wav_output_filename = 'input.wav'
 
     audio = pyaudio.PyAudio()
 
     # Create pyaudio stream.
     stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
-                        input_device_index = dev_index,input = True, \
+                        input_device_index = None,input = True, \
                         frames_per_buffer=chunk)
     print("recording")
     frames = []
@@ -90,13 +94,18 @@ def record_wav():
 
     return
 
+import torchaudio
+from audiocraft.models import MusicGen
+from audiocraft.data.audio import audio_write
 
+model = MusicGen.get_pretrained('facebook/musicgen-melody')
+model.set_generation_params(duration=8)  # generate 8 seconds.
 
 def main():
+    music_genre=""
 
     # Define the initial prompt
-    prompt = "You are an assistant who would guide me through the process of sharing my current state to my significant other. You could prompt me by asking one question picked from the following. Questions you are allowed to ask are: “how are you feeling?”, “what's on your mind”, “where are you”, “what are you doing”, “How’s the weather”, “What did you eat”. I as the user might be comfortable to just share freely, and you should actively analyze my input to see if i have shared information that can be answers to any of the questions. If I have shared the answer to any questions above, DO NOT ask me that question! Before you ask me the question, check to see if you can answer any of the questions for me by using information i have provided, and if you can, do not ask that question! You will be significantly penalized for asking repetitive questions. Start by asking me: ”Do you want to share your moment?”, and proceed with other questions only if I say “Yes”.  If I have answered all the questions, recommend me a music genre that fits for my current moment, and say ”you have shared all the information needed, let's start constructing a music piece!”, along with the music genre you recommend."
-
+    prompt = "You are an assistant who would guide me through the process of sharing my current state to my significant other. You could prompt me by asking one question picked from the following. Questions you are allowed to ask are exactly: “how are you feeling?”, “what's on your mind”, “where are you”, “what are you doing”, “How’s the weather”, “What did you eat”. I as the user might be comfortable to just share freely, and you should actively analyze my input to see if i have shared information that can be answers to any of the questions. If I have shared the answer to any questions above, DO NOT ask me that question! Before you ask me the question, check to see if you can answer any of the questions for me by using information i have provided, and if you can, do not ask that question! You will be significantly penalized for asking repetitive questions. Start by asking me: ”Do you want to share your moment?”, and proceed with other questions only if I say “Yes”.  If I have answered all the questions, recommend me a music genre that fits for my current moment, phrases in a way that I can put your answer as prompt into a music generator. Some example for the music genre prompt are '80s pop track with bassy drums and synth', or ‘'Bluesy guitar instrumental with soulful licks and a driving rhythm section’.  Say ”you have shared all the information needed, let's start constructing a music piece! The recommended music genre is {the music genre you recommend} ”."
     # Start the conversation
     print("Starting conversation...")
 
@@ -136,12 +145,32 @@ def main():
             text_to_speech(gpt_response)
 
             # Play audio of reponse.
-            os.system("aplay speech.mp3")
+            play_audio("speech.mp3")
+             # Wait for the audio to finish playing before starting recording
+            while pygame.mixer.music.get_busy():
+                # pygame.time.delay(100)
+                pygame.time.Clock().tick(1)
+
+            if "constructing a music piece" in gpt_response:
+                start_index = gpt_response.find("The recommended music genre is")
+                music_genre = gpt_response[start_index + len("The recommended music genre is "):].strip(".")
+                print(music_genre)
+
+                print("Exiting chat...")
+                break
 
         except Exception as e:
             print(f"An error occurred: {e}")
+    
 
- 
+    descriptions = [music_genre]
+
+    melody, sr = torchaudio.load('sample2.wav')
+    # generates using the melody from the given audio and the provided descriptions.
+    wav = model.generate_with_chroma(descriptions, melody[None], sr)
+
+    audio_write('output1', wav[0].cpu(), model.sample_rate, strategy="loudness", loudness_compressor=True)
+    
 
 if __name__ == "__main__":
     main()
