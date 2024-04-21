@@ -238,11 +238,12 @@ def overlayAmbient(i,moment):
     print("generated ambient saved for ",i)
     # Overlay the ambient sound with the generated music
     
-    audio1 = AudioSegment.from_file(f'ambient_{i}.wav')
-    audio2 = AudioSegment.from_file(f'music_{i}.wav')
+    audio1 = AudioSegment.from_file(f'music_{i}.wav')
+    audio2 = AudioSegment.from_file(f'ambient_{i}.wav')
+    audio2 = audio2.apply_gain(-20)
 
     # Overlay audio2 on top of audio1, starting at the beginning of audio1
-    overlayed = audio1.overlay(audio2,gain_during_overlay=-20)
+    overlayed = audio1.overlay(audio2,loop=True)
 
     # Export the overlayed audio
     overlayed.export(f"music_overlay_{i}.wav", format="wav")
@@ -264,13 +265,13 @@ def concatePieces(num):
     
 
 if __name__ == "__main__":
-    # chathistory = chatbot()
-    # print("HERE CHATS",chathistory)
-    # chathistory = [{'role': 'system', 'content': '\n        You are an assistant who will guide me through the process of reflecting on my day. \n        Start by asking me: "Do you want to share your day?"\n\n        You can prompt me then a total of two questions, choosing one from the following each time:\n        1. "Were there any times today when you felt calm, relaxed, or at peace?";\n        2. "Did you have any moments of fear or anxiety today? What were you afraid of?";\n        3. "Were there any moments today when you felt completely present and engaged in the moment?";\n        4. "What time today were you the most happy?";\n        5. "Were there any times today when you felt angry and acted out of character?";\n        6. "Were there any times today where you made decisions that you now regret?";\n        7. "When did the most meaningful interaction with others happen today, and what happened?";\n        \n        At the end, say Goodnight and exit.\n    '}, {'role': 'user', 'content': 'yes I want to share I want to share my day'}, {'role': 'assistant', 'content': 'That\'s great! First, let\'s start by asking: "Were there any times today when you felt calm, relaxed, or at peace?"'}, {'role': 'user', 'content': "yes I think currently I'm feeling very relaxed and I'm hearing the winds that's blowing outside"}, {'role': 'assistant', 'content': 'I\'m glad to hear that you\'re feeling relaxed now. Listening to the wind can indeed be calming. For the next question: "When did the most meaningful interaction with others happen today, and what happened?"'}, {'role': 'user', 'content': 'It happened about an hour ago when I was telling my roommate about swim competitions in general. It was exciting.'}, {'role': 'assistant', 'content': "That sounds like a wonderful conversation. It's fantastic when we can share our passions with others. Thank you for sharing your day with me. Goodnight!"}]
-    # moments = analyze(chathistory)
-    # print("Moments",moments)
-    # moments_list = ast.literal_eval(moments)
-    # print("Moments",type(moments_list))
+    chathistory = chatbot()
+    print("HERE CHATS",chathistory)
+    chathistory = [{'role': 'system', 'content': '\n        You are an assistant who will guide me through the process of reflecting on my day. \n        Start by asking me: "Do you want to share your day?"\n\n        You can prompt me then a total of two questions, choosing one from the following each time:\n        1. "Were there any times today when you felt calm, relaxed, or at peace?";\n        2. "Did you have any moments of fear or anxiety today? What were you afraid of?";\n        3. "Were there any moments today when you felt completely present and engaged in the moment?";\n        4. "What time today were you the most happy?";\n        5. "Were there any times today when you felt angry and acted out of character?";\n        6. "Were there any times today where you made decisions that you now regret?";\n        7. "When did the most meaningful interaction with others happen today, and what happened?";\n        \n        At the end, say Goodnight and exit.\n    '}, {'role': 'user', 'content': 'yes I want to share I want to share my day'}, {'role': 'assistant', 'content': 'That\'s great! First, let\'s start by asking: "Were there any times today when you felt calm, relaxed, or at peace?"'}, {'role': 'user', 'content': "yes I think currently I'm feeling very relaxed and I'm hearing the winds that's blowing outside"}, {'role': 'assistant', 'content': 'I\'m glad to hear that you\'re feeling relaxed now. Listening to the wind can indeed be calming. For the next question: "When did the most meaningful interaction with others happen today, and what happened?"'}, {'role': 'user', 'content': 'It happened about an hour ago when I was telling my roommate about swim competitions in general. It was exciting.'}, {'role': 'assistant', 'content': "That sounds like a wonderful conversation. It's fantastic when we can share our passions with others. Thank you for sharing your day with me. Goodnight!"}]
+    moments = analyze(chathistory)
+    print("Moments",moments)
+    moments_list = ast.literal_eval(moments)
+    print("Moments",type(moments_list))
     moments_list =[{'emotion': 'calm', 'time': 'now', 'ambient': 'raining sound', 'prompt': 'Relaxing jazz track with smooth saxophone and a gentle rhythm section'}, {'emotion': 'excitement', 'time': 'an hour ago', 'ambient':'remote voices chatting and laughter', 'prompt':'Energetic pop track with upbeat drums and engaging vocals'}]
     for i, moment in enumerate(moments_list):
         generateMusic(i,moment)
