@@ -90,7 +90,7 @@ def plot_emotion_vs_time2(data):
     
     # Calculate the x and y coordinates for each point
     x_coords = [int(d['time_value'] * 12.8) for d in sorted_data]
-    y_coords = [int(d['emotion_value'] * 6.4) for d in sorted_data]
+    y_coords = [int(d['emotion_value'] * 3.2) for d in sorted_data]
     
     # Create a list of strings representing drawLine parameters
     segments = []
@@ -104,7 +104,7 @@ def plot_emotion_vs_time2(data):
 
 data = [{'emotion_value': 6, 'time_value': 10, 'rgb': (62, 141, 188)},
         {'emotion_value': 8, 'time_value': 1, 'rgb': (174, 238, 0)},
-        {'emotion_value': 10, 'time_value': 9, 'rgb': (97, 237, 99)},
+        {'emotion_value': 10, 'time_value':2, 'rgb': (97, 237, 99)},
         {'emotion_value': 2, 'time_value': 6, 'rgb': (141, 85, 191)},
         {'emotion_value': 1, 'time_value': 4, 'rgb': (164, 36, 59)}]
 
@@ -114,15 +114,50 @@ print(points)
 
 import serial
 
-# Establish serial connection with Arduino
-ser = serial.Serial('COM3', 9600)  # Use the correct port and baud rate
+# # Establish serial connection with Arduino
+# ser = serial.Serial('/dev/cu.HUAWEISoundJoy-21808', 9600,timeout=0.1)  # Use the correct port and baud rate
+# # ser = serial.Serial('/dev/cu.usbmodem2101', 9600,timeout=0.1)
+# try:
+#     ser = serial.Serial('/dev/cu.usbmodem2101', 9600,timeout=0.1)
+#     time.sleep(2)  # 给Arduino重启和准备数据传输的时间
+#     serialized_data = ';'.join([f"{x1},{y1},{x2},{y2}" for x1, y1, x2, y2 in points])
+#     # Send data to Arduino
+#     # print(serialized_data): #12,51,51,6;51,6,76,12;76,12,115,64;115,64,128,38
+#     ser.write(serialized_data.encode())
+#     while True:
+#         # 发送数据到Arduino
+#         # ser.write(b'Hello Arduino!\n')
+#         # print("Message sent to Arduino")
 
-def send_data_to_arduino(data):
-    serialized_data = ';'.join([f"{x1},{y1},{x2},{y2}" for x1, y1, x2, y2 in data])
+#         # 读取来自Arduino的响应
+#         if ser.in_waiting > 0:
+#             line = ser.readline().decode('utf-8').rstrip()
+#             print("Received from Arduino:", line)
+#             ser.close()
+
+#         time.sleep(1)  # 等待一秒再发送下一条消息
+
+# finally:
+#     ser.close()  # 确保无论如何都关闭串口
+
+
+import serial
+import time
+
+try:
+    # Establish serial connection with Arduino
+    ser = serial.Serial('/dev/cu.usbmodem2101', 9600, timeout=0.1)
+    time.sleep(2)  # Give Arduino time to restart and prepare for data transfer
+
     # Send data to Arduino
-    # print(serialized_data): #12,51,51,6;51,6,76,12;76,12,115,64;115,64,128,38
-    serialized_data.write(data.encode())
+    serialized_data = ';'.join([f"{x1},{y1},{x2},{y2}" for x1, y1, x2, y2 in points])
+    ser.write(serialized_data.encode())
+    print("Message sent to Arduino")
 
-# Example usage
-data = points
-send_data_to_arduino(data)
+    # Read response from Arduino
+    response = ser.readline().decode('utf-8').rstrip()
+    print("Received from Arduino:", response)
+    time.sleep(2)
+
+finally:
+    ser.close()  # Close the serial port

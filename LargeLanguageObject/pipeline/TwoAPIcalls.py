@@ -17,7 +17,7 @@ import time
 from pydub import AudioSegment
 
 # Set your OpenAI API key here
-api_key = ""
+api_key = ''
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
@@ -306,6 +306,5 @@ if __name__ == "__main__":
         generateMusic(i,moment)
         overlayAmbient(i,moment)
         
-    # generateMusic(1,{'emotion': 'calm', 'time': 'currently', 'ambient': 'winds blowing outside', 'prompt': 'Soft instrumental track with calming wind sounds'})
     concatePieces(len(moments_list))
     points = plot_emotion_vs_time(moments_list)
