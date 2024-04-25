@@ -16,10 +16,17 @@ import openai
 import time
 from pydub import AudioSegment
 
+import pygame
+
 # Set your OpenAI API key here
 api_key = ''
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
+
+def play_audio(file_path):
+    pygame.mixer.init()
+    pygame.mixer.music.load(file_path)
+    pygame.mixer.music.play()
 
 
 data = [{'emotion':'calm', 'time':'now'},{'emotion': 'engaged', 'time': 'morning'},{'emotion': 'happy', 'time': 'an hour ago'},{'emotion':'sad','time':'late afternoon'},{'emotion':'stressed','time':'noon'}]
@@ -102,11 +109,12 @@ def plot_emotion_vs_time2(data):
     
     return segments
 
-data = [{'emotion_value': 6, 'time_value': 10, 'rgb': (62, 141, 188)},
-        {'emotion_value': 8, 'time_value': 1, 'rgb': (174, 238, 0)},
-        {'emotion_value': 10, 'time_value':2, 'rgb': (97, 237, 99)},
+data = [{'emotion_value': 8, 'time_value': 1, 'rgb': (174, 238, 0)},
+        {'emotion_value': 1, 'time_value': 4, 'rgb': (164, 36, 59)},
         {'emotion_value': 2, 'time_value': 6, 'rgb': (141, 85, 191)},
-        {'emotion_value': 1, 'time_value': 4, 'rgb': (164, 36, 59)}]
+        {'emotion_value': 10, 'time_value': 9, 'rgb': (97, 237, 99)},
+        {'emotion_value': 6, 'time_value': 10, 'rgb': (62, 141, 188)},
+        ]
 
 # alldata = [{'emotion': 'excitement', 'emotion_value': 7, 'emotion_rgb': (245, 176, 65), 'time': 'an hour ago', 'time_value': 9, 'ambient': 'chattering', 'prompt': 'Upbeat pop track with rhythmic beats'}, {'emotion': 'relaxed', 'emotion_value': 6, 'emotion_rgb': (137, 207, 240), 'time': 'now', 'time_value': 10, 'ambient': 'winds blowing', 'prompt': 'Smooth jazz with wind sounds embedded'}]
 points = plot_emotion_vs_time2(data)
@@ -114,50 +122,36 @@ print(points)
 
 import serial
 
-# # Establish serial connection with Arduino
+# Establish serial connection with Arduino
 # ser = serial.Serial('/dev/cu.HUAWEISoundJoy-21808', 9600,timeout=0.1)  # Use the correct port and baud rate
-# # ser = serial.Serial('/dev/cu.usbmodem2101', 9600,timeout=0.1)
-# try:
-#     ser = serial.Serial('/dev/cu.usbmodem2101', 9600,timeout=0.1)
-#     time.sleep(2)  # 给Arduino重启和准备数据传输的时间
-#     serialized_data = ';'.join([f"{x1},{y1},{x2},{y2}" for x1, y1, x2, y2 in points])
-#     # Send data to Arduino
-#     # print(serialized_data): #12,51,51,6;51,6,76,12;76,12,115,64;115,64,128,38
-#     ser.write(serialized_data.encode())
-#     while True:
-#         # 发送数据到Arduino
-#         # ser.write(b'Hello Arduino!\n')
-#         # print("Message sent to Arduino")
-
-#         # 读取来自Arduino的响应
-#         if ser.in_waiting > 0:
-#             line = ser.readline().decode('utf-8').rstrip()
-#             print("Received from Arduino:", line)
-#             ser.close()
-
-#         time.sleep(1)  # 等待一秒再发送下一条消息
-
-# finally:
-#     ser.close()  # 确保无论如何都关闭串口
-
-
-import serial
-import time
-
+# ser = serial.Serial('/dev/cu.usbmodem2101', 9600,timeout=0.1)
 try:
-    # Establish serial connection with Arduino
-    ser = serial.Serial('/dev/cu.usbmodem2101', 9600, timeout=0.1)
-    time.sleep(2)  # Give Arduino time to restart and prepare for data transfer
-
-    # Send data to Arduino
-    serialized_data = ';'.join([f"{x1},{y1},{x2},{y2}" for x1, y1, x2, y2 in points])
-    ser.write(serialized_data.encode())
-    print("Message sent to Arduino")
-
-    # Read response from Arduino
-    response = ser.readline().decode('utf-8').rstrip()
-    print("Received from Arduino:", response)
-    time.sleep(2)
+    ser = serial.Serial('/dev/cu.usbmodem2101', 9600,timeout=0.1)
+    time.sleep(2)  # 给Arduino重启和准备数据传输的时间
+    prev_momentindex = None
+    while True:
+        # 发送数据到Arduino
+        # ser.write(b'Hello Arduino!\n')
+        # print("Message sent to Arduino")
+        serialized_data = ';'.join([f"{x1},{y1},{x2},{y2}" for x1, y1, x2, y2 in points])
+        ser.write(serialized_data.encode())
+        # 读取来自Arduino的响应
+        if ser.in_waiting > 0:
+        # if ser.fileno() > 0:
+            line = ser.readline().decode('utf-8').rstrip()
+            if line.startswith("A:"):  # Check if the line starts with "A:"
+                angle = float(line[2:])  # Extract the angle value
+                value = angle / 315 * 128 /12.8
+                print("Mapped value:", value)
+                momentindex = min(range(len(data)), key=lambda i: abs(data[i]['time_value'] - value))
+                print(momentindex)  # Output: 2
+                if momentindex != prev_momentindex:
+                    play_audio(f"music_overlay_{momentindex}.wav")
+                    prev_momentindex = momentindex
+                # play music_overlay_3.wav
+            else:
+                print("Received from Arduino:", line)
+        time.sleep(1)  # 等待一秒再发送下一条消息
 
 finally:
-    ser.close()  # Close the serial port
+    ser.close()  # 确保无论如何都关闭串口
