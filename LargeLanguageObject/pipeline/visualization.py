@@ -92,14 +92,16 @@ try:
         # if ser.fileno() > 0:
             line = ser.readline().decode('utf-8').rstrip()
             if line.startswith("A:"):  # Check if the line starts with "A:"
+                print("Received Angle:", line)
                 angle = float(line[2:])  # Extract the angle value
                 value = angle / 315 * 128 /12.8
-                # print("Mapped value:", value)
+                print("Mapped value:", value)
                 momentindex = min(range(len(data)), key=lambda i: abs(data[i]['time_value'] - value))
-                print(momentindex)  # Output: 2
+                
                 if momentindex != prev_momentindex:
                     print("change!")  # Output: 2
-                    # play_audio(f"music_overlay_{momentindex}.wav")
+                    print(momentindex)  # Output: 2
+                    play_audio(f"music_overlay_{momentindex}.wav")
                     prev_momentindex = momentindex
                 # play music_overlay_3.wav
             else:
