@@ -11,7 +11,7 @@ import time
 from pydub import AudioSegment
 
 # Set your OpenAI API key here
-api_key = 
+api_key = ''
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
@@ -46,6 +46,47 @@ def text_to_speech(tts):
         input=tts
     )
     response.stream_to_file(speech_file_path)
+    return
+
+def record_humming():
+    print('humming start:')
+    form_1 = pyaudio.paInt16
+    chans = 1
+    samp_rate = 16000
+    chunk = 4096
+    record_secs = 10      
+    # dev_index = 1
+    wav_output_filename = 'humming.wav'
+
+    audio = pyaudio.PyAudio()
+
+    # Create pyaudio stream.
+    stream = audio.open(format = form_1,rate = samp_rate,channels = chans, \
+                        input_device_index = None,input = True, \
+                        frames_per_buffer=chunk)
+    print("recording humming")
+    frames = []
+
+    # Loop through stream and append audio chunks to frame array.
+    for ii in range(0,int((samp_rate/chunk)*record_secs)):
+        data = stream.read(chunk)
+        frames.append(data)
+
+    print("finished recording humming")
+
+    # Stop the stream, close it, and terminate the pyaudio instantiation.
+    stream.stop_stream()
+    stream.close()
+    audio.terminate()
+
+    # Save the audio frames as .wav file.
+    wavefile = wave.open(wav_output_filename,'wb')
+    wavefile.setnchannels(chans)
+    wavefile.setsampwidth(audio.get_sample_size(form_1))
+    wavefile.setframerate(samp_rate)
+    wavefile.writeframes(b''.join(frames))
+    wavefile.close()
+
     return
 
 
@@ -100,7 +141,7 @@ model.set_generation_params(duration=8)
 from audiocraft.models import AudioGen
 
 model_audio = AudioGen.get_pretrained('facebook/audiogen-medium')
-model_audio.set_generation_params(duration=7)
+model_audio.set_generation_params(duration=4)
 
 
 def chatbot():
@@ -204,7 +245,7 @@ def generateMusic(i,moment):
     print("generating music ", description, " for ",i)
     
     # melody, sr = torchaudio.load('sample2.wav')
-    melody, sr = torchaudio.load('samplehuman.wav')
+    melody, sr = torchaudio.load('humming.wav')
     # generates using the melody from the given audio and the provided descriptions.
     wav = model.generate_with_chroma(description, melody[None], sr)
 
@@ -278,6 +319,7 @@ data = [{'emotion_value': 2, 'time_value': 0, 'rgb': (237, 56, 43)},
         ]
 
 if __name__ == "__main__":
+    record_humming()
     chathistory = chatbot()
     print("HERE CHATS",chathistory)
     #chathistory = [{'role': 'system', 'content': '\n        You are an assistant who will guide me through the process of reflecting on my day. \n        Start by asking me: "Do you want to share your day?"\n\n        You can prompt me then a total of two questions, choosing one from the following each time:\n        1. "Were there any times today when you felt calm, relaxed, or at peace?";\n        2. "Did you have any moments of fear or anxiety today? What were you afraid of?";\n        3. "Were there any moments today when you felt completely present and engaged in the moment?";\n        4. "What time today were you the most happy?";\n        5. "Were there any times today when you felt angry and acted out of character?";\n        6. "Were there any times today where you made decisions that you now regret?";\n        7. "When did the most meaningful interaction with others happen today, and what happened?";\n        \n        At the end, say Goodnight and exit.\n    '}, {'role': 'user', 'content': 'yes I want to share I want to share my day'}, {'role': 'assistant', 'content': 'That\'s great! First, let\'s start by asking: "Were there any times today when you felt calm, relaxed, or at peace?"'}, {'role': 'user', 'content': "yes I think currently I'm feeling very relaxed and I'm hearing the winds that's blowing outside"}, {'role': 'assistant', 'content': 'I\'m glad to hear that you\'re feeling relaxed now. Listening to the wind can indeed be calming. For the next question: "When did the most meaningful interaction with others happen today, and what happened?"'}, {'role': 'user', 'content': 'It happened about an hour ago when I was telling my roommate about swim competitions in general. It was exciting.'}, {'role': 'assistant', 'content': "That sounds like a wonderful conversation. It's fantastic when we can share our passions with others. Thank you for sharing your day with me. Goodnight!"}]

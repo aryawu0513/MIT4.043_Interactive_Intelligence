@@ -11,7 +11,7 @@ import time
 from pydub import AudioSegment
 
 # Set your OpenAI API key here
-api_key = 
+api_key =
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
