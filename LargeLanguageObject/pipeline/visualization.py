@@ -35,7 +35,7 @@ def plot_emotion_vs_time2(data):
     sorted_data = sorted(data, key=lambda x: x['time_value'])
     
     # Calculate the x and y coordinates for each point
-    x_coords = [int(d['time_value'] * 12.8) for d in sorted_data]
+    x_coords = [int(d['time_value'] * 21.3) for d in sorted_data]
     y_coords = [int(d['emotion_value'] * 3.2) for d in sorted_data]
     
     # Create a list of strings representing drawLine parameters
@@ -48,21 +48,18 @@ def plot_emotion_vs_time2(data):
     
     return segments
 
-# data = [{'emotion_value': 8, 'time_value': 1, 'rgb': (174, 238, 0)},
-#         {'emotion_value': 1, 'time_value': 4, 'rgb': (164, 36, 59)},
-#         {'emotion_value': 2, 'time_value': 6, 'rgb': (141, 85, 191)},
-#         {'emotion_value': 10, 'time_value': 9, 'rgb': (97, 237, 99)},
-#         {'emotion_value': 6, 'time_value': 10, 'rgb': (62, 141, 188)},
-#         ]
-
-data = [{'emotion_value': 8, 'time_value': 1, 'rgb': (255, 255, 0)},
-        {'emotion_value': 1, 'time_value': 4, 'rgb': (0, 255, 255)},
-        {'emotion_value': 2, 'time_value': 6, 'rgb': (255, 0, 255)},
-        {'emotion_value': 10, 'time_value': 9, 'rgb': (97, 237, 99)},
-        {'emotion_value': 6, 'time_value': 10, 'rgb': (62, 141, 188)},
+data = [{'emotion_value': 2, 'time_value': 0, 'rgb': (237, 56, 43)},
+        {'emotion_value': 10, 'time_value': 1, 'rgb': (39, 1, 128)},
+        {'emotion_value': 5, 'time_value': 2, 'rgb': (39, 1, 128)},
+        {'emotion_value': 8, 'time_value': 3, 'rgb': (2, 240, 80)},
+        {'emotion_value': 7, 'time_value': 4, 'rgb': (2, 240, 80)},
+        {'emotion_value': 3, 'time_value': 5, 'rgb': (140, 230, 30)},
+        # {'emotion_value': 0, 'time_value': 6, 'rgb': (140, 230, 30)},
         ]
 
-# alldata = [{'emotion': 'excitement', 'emotion_value': 7, 'emotion_rgb': (245, 176, 65), 'time': 'an hour ago', 'time_value': 9, 'ambient': 'chattering', 'prompt': 'Upbeat pop track with rhythmic beats'}, {'emotion': 'relaxed', 'emotion_value': 6, 'emotion_rgb': (137, 207, 240), 'time': 'now', 'time_value': 10, 'ambient': 'winds blowing', 'prompt': 'Smooth jazz with wind sounds embedded'}]
+data.append({'emotion_value': 0, 'time_value': 6, 'rgb': (140, 230, 30)})
+
+
 points = plot_emotion_vs_time2(data)
 print(points)
 
@@ -94,7 +91,7 @@ try:
             if line.startswith("A:"):  # Check if the line starts with "A:"
                 print("Received Angle:", line)
                 angle = float(line[2:])  # Extract the angle value
-                value = angle / 315 * 128 /12.8
+                value = angle / 315 * 128 /21.3
                 print("Mapped value:", value)
                 momentindex = min(range(len(data)), key=lambda i: abs(data[i]['time_value'] - value))
                 
