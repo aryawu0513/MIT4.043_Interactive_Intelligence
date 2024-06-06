@@ -273,9 +273,8 @@ data = [{'emotion_value': 2, 'time_value': 0, 'rgb': (237, 56, 43)},
         {'emotion_value': 10, 'time_value': 1, 'rgb': (39, 1, 128)},
         {'emotion_value': 5, 'time_value': 2, 'rgb': (39, 1, 128)},
         {'emotion_value': 8, 'time_value': 3, 'rgb': (2, 240, 80)},
-        {'emotion_value': 7, 'time_value': 4, 'rgb': (2, 240, 80)},
-        {'emotion_value': 3, 'time_value': 5, 'rgb': (140, 230, 30)},
-        # {'emotion_value': 0, 'time_value': 6, 'rgb': (140, 230, 30)},
+        {'emotion_value': 3, 'time_value': 4, 'rgb': (140, 230, 30)},
+        {'emotion_value': 0, 'time_value': 5, 'rgb': (140, 230, 30)},
         ]
 
 if __name__ == "__main__":
@@ -285,7 +284,7 @@ if __name__ == "__main__":
     day = analyze(chathistory)
     print("Moments",day)
     day_dict = ast.literal_eval(day)
-    i=7
+    i=6
     generateMusic(i,day_dict)
     overlayAmbient(i,day_dict)
     
